@@ -33,20 +33,22 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
 
     val enableMetrics = (enableMetricsProvider.orNull == "true")
     if (enableMetrics) {
-        val metricsFolder = rootProject.buildDir.resolve("compose-metrics").resolve(relativePath)
+        val metricsFolder =
+            rootProject.layout.buildDirectory.dir("compose-metrics/${relativePath.path}").get()
         metricParameters.add("-P")
         metricParameters.add(
-            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + metricsFolder.absolutePath
+            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$metricsFolder"
         )
     }
 
     val enableReportsProvider = project.providers.gradleProperty("enableComposeCompilerReports")
     val enableReports = (enableReportsProvider.orNull == "true")
     if (enableReports) {
-        val reportsFolder = rootProject.buildDir.resolve("compose-reports").resolve(relativePath)
+        val reportsFolder =
+            rootProject.layout.buildDirectory.dir("compose-reports/${relativePath.path}").get()
         metricParameters.add("-P")
         metricParameters.add(
-            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + reportsFolder.absolutePath
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$reportsFolder"
         )
     }
     return metricParameters.toList()
